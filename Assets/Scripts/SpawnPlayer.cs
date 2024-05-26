@@ -7,6 +7,8 @@ public class SpawnPlayer : MonoBehaviour
 {
     public GameObject Player;
     public Transform SpawnPoint;
+    public HUD hud;
+    public Inventory inventory;
 
     [SerializeField]PlayerFollow playerfollow;
 
@@ -27,6 +29,12 @@ public class SpawnPlayer : MonoBehaviour
         GameObject User = PhotonNetwork.Instantiate(Player.name, SpawnPoint.position,SpawnPoint.rotation);
         if (User.GetPhotonView().IsMine)
         {
+            PlayerController controller = User.GetComponent<PlayerController>();
+            if (controller)
+            {
+                controller.Hud = hud;
+                controller.Inventory = inventory;
+            }
             if (playerfollow)
                 playerfollow.SetCameraTarget(User.transform);
             else

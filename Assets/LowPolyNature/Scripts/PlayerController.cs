@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        
+        
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
         Inventory.ItemUsed += Inventory_ItemUsed;
@@ -76,6 +78,7 @@ public class PlayerController : MonoBehaviour
         mFoodBar.SetValue(Food);
 
         InvokeRepeating("IncreaseHunger", 0, HungerRate);
+       
     }
 
 
@@ -348,6 +351,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
+        if (Inventory == null)
+        {
+            Inventory = FindAnyObjectByType<Inventory>();
+        }
+        if (Hud == null)
+        {
+            Hud = FindAnyObjectByType<HUD>();   
+        }
+        */
+
         if (!IsDead && mIsControlEnabled && view.IsMine)
         {
             // Interact with the item
