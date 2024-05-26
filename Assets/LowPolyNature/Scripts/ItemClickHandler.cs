@@ -13,6 +13,10 @@ public class ItemClickHandler : MonoBehaviour
 
     void Awake()
     {
+        if(_Inventory == null)
+        {
+            _Inventory = FindAnyObjectByType<Inventory>();
+        }
         _button = GetComponent<Button>();
     }
 

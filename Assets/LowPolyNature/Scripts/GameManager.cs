@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-    public static GameManager Instance = null;                         
+    public static GameManager Instance = null;
+    public PlayerController Player;
 
     void Awake()
     {
@@ -25,6 +26,6 @@ public class GameManager : MonoBehaviour {
  
     }
 
-    public PlayerController Player;
+    
     
 }

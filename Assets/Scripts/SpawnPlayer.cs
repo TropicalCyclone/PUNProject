@@ -9,7 +9,7 @@ public class SpawnPlayer : MonoBehaviour
     public Transform SpawnPoint;
     public HUD hud;
     public Inventory inventory;
-
+    public GameManager gameManager;
     [SerializeField]PlayerFollow playerfollow;
 
     // Update is called once per frame
@@ -30,6 +30,7 @@ public class SpawnPlayer : MonoBehaviour
         if (User.GetPhotonView().IsMine)
         {
             PlayerController controller = User.GetComponent<PlayerController>();
+            gameManager.Player = controller;    
             if (controller)
             {
                 controller.Hud = hud;
@@ -42,5 +43,6 @@ public class SpawnPlayer : MonoBehaviour
                 Debug.Log("did not link camera to player");
             }
         }
+        
     }
 }
