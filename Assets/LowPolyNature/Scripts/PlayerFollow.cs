@@ -26,6 +26,7 @@ public class PlayerFollow : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        if(PlayerTransform)
         _cameraOffset = transform.position - PlayerTransform.position;
     }
 
