@@ -7,19 +7,34 @@ using Photon.Realtime;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    public TMP_InputField createInput, joinInput;
+    public TMP_InputField createInput, joinInput, Nickname;
+    public TMP_Text ErrorName;
     public byte maxPlayers;
     // Start is called before the first frame update
     public void CreateBTN()
     {
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = maxPlayers;
-        PhotonNetwork.CreateRoom(createInput.text,roomOptions);
+        if (PhotonNetwork.NickName != "")
+        {
+            RoomOptions roomOptions = new RoomOptions();
+            roomOptions.MaxPlayers = maxPlayers;
+            PhotonNetwork.CreateRoom(createInput.text, roomOptions);
+        }
+        else
+        {
+            ErrorName.text = "Name is Required when Creating and Joining games.";
+        }
     }
 
     public void JoinBTN()
     {
-        PhotonNetwork.JoinRoom(joinInput.text);
+        if (PhotonNetwork.NickName != "")
+        {
+            PhotonNetwork.JoinRoom(joinInput.text);
+        }
+        else
+        {
+            ErrorName.text = "Name is Required when Creating and Joining games.";
+        }
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -30,5 +45,18 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined Game");
         PhotonNetwork.LoadLevel("Game");
+    }
+
+    public void SetNickname()
+    {
+        if (Nickname.text != "")
+        {
+            PhotonNetwork.NickName = Nickname.text;
+            ErrorName.text = "";
+        }
+        else
+        {
+            ErrorName.text = "Name space should not be empty";
+        }
     }
 }
