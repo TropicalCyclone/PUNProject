@@ -57,28 +57,29 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        
-        
-        _animator = GetComponent<Animator>();
-        _characterController = GetComponent<CharacterController>();
-        Inventory.ItemUsed += Inventory_ItemUsed;
-        Inventory.ItemRemoved += Inventory_ItemRemoved;
+        if (view.IsMine)
+        {
+            _animator = GetComponent<Animator>();
+            _characterController = GetComponent<CharacterController>();
+            Inventory.ItemUsed += Inventory_ItemUsed;
+            Inventory.ItemRemoved += Inventory_ItemRemoved;
 
-        view = GetComponent<PhotonView>();
-        mHealthBar = Hud.transform.Find("Bars_Panel/HealthBar").GetComponent<HealthBar>();
-        mHealthBar.Min = 0;
-        mHealthBar.Max = Health;
-        startHealth = Health;
-        mHealthBar.SetValue(Health);
+            view = GetComponent<PhotonView>();
+            mHealthBar = Hud.transform.Find("Bars_Panel/HealthBar").GetComponent<HealthBar>();
+            mHealthBar.Min = 0;
+            mHealthBar.Max = Health;
+            startHealth = Health;
+            mHealthBar.SetValue(Health);
 
-        mFoodBar = Hud.transform.Find("Bars_Panel/FoodBar").GetComponent<HealthBar>();
-        mFoodBar.Min = 0;
-        mFoodBar.Max = Food;
-        startFood = Food;
-        mFoodBar.SetValue(Food);
+            mFoodBar = Hud.transform.Find("Bars_Panel/FoodBar").GetComponent<HealthBar>();
+            mFoodBar.Min = 0;
+            mFoodBar.Max = Food;
+            startFood = Food;
+            mFoodBar.SetValue(Food);
 
-        InvokeRepeating("IncreaseHunger", 0, HungerRate);
-       
+//InvokeRepeating("IncreaseHunger", 0, HungerRate);
+        }
+
     }
 
 
