@@ -12,16 +12,12 @@ public class BaseItem : MonoBehaviour
     [TextArea]
     private string description;
     [SerializeField]
-    private List<GameObject> door;
-    [SerializeField]
     private Sprite itemImage;
     private GameObject itemGameObject;
     [SerializeField]
     private Rigidbody itemRigidbody;
     [SerializeField]
     private Collider itemCollider;
-
-    public List<GameObject> GetDoor{get{return door;}}
 
     private void OnEnable()
     {
@@ -43,9 +39,4 @@ public class BaseItem : MonoBehaviour
         return itemCollider;
     }
 
-}
-
-public interface IPaintMaterial
-{
-    void SetMaterial(Material material);
 }
