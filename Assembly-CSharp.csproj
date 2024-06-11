@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\LoadingText.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\PlayerController.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Crate.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerGrab.cs" />
     <Compile Include="Assets\Scripts\SpawnPlayer.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Axe.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Gem.cs" />
@@ -73,9 +74,12 @@
     <Compile Include="Assets\Scripts\hueChanger.cs" />
     <Compile Include="Assets\Scripts\Username.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\InventorySlot.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemManager.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Environment\MovingPlatform.cs" />
+    <Compile Include="Assets\Scripts\Item\BaseItem.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\ItemDragHandler.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\InventoryItemBase.cs" />
+    <Compile Include="Assets\Scripts\Item\Item.cs" />
     <Compile Include="Assets\Scripts\MessageChat.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\ItemClickHandler.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\ItemDropHandler.cs" />
@@ -87,6 +91,8 @@
     <Compile Include="Assets\LowPolyNature\Scripts\Food.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
     <Compile Include="Assets\Scripts\LobbyManager.cs" />
+    <Compile Include="Assets\Scripts\UI\UIManager.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Loading.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\InventoryItem.cs" />
   </ItemGroup>
