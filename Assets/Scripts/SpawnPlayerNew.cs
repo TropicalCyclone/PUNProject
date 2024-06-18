@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Cinemachine;
 
 public class SpawnPlayerNew : MonoBehaviour
 {
     public GameObject Player;
     public Transform SpawnPoint;
-    public GameManager gameManager;
+    public GameObject Camera;
+    public CinemachineFreeLook freeLook;
+    public UIManager uiManager;
 
     // Update is called once per frame
     void Update()
     {
-        playerfollow = FindAnyObjectByType<PlayerFollow>();
     }
 
     private void Start()
@@ -22,24 +24,19 @@ public class SpawnPlayerNew : MonoBehaviour
 
     void SpawnPlayers()
     {
-       
         GameObject User = PhotonNetwork.Instantiate(Player.name, SpawnPoint.position,SpawnPoint.rotation);
+        PlayerMovement manager = User.GetComponent<PlayerMovement>();
+        PlayerGrab playerGrab = User.GetComponent<PlayerGrab>();
         if (User.GetPhotonView().IsMine)
         {
-            PlayerController controller = User.GetComponent<PlayerController>();
-            gameManager.Player = controller;    
-            if (controller)
-            {
-                controller.Hud = hud;
-                controller.Inventory = inventory;
-            }
-            if (playerfollow)
-                playerfollow.SetCameraTarget(User.transform);
-            else
-            {
-                Debug.Log("did not link camera to player");
-            }
+            manager.SetCamera(Camera);
+            freeLook.Follow = manager.transform;
+            freeLook.LookAt = manager.transform;
+            playerGrab._uiManager = uiManager;
+            
+            return;
         }
-        
+       
+
     }
 }

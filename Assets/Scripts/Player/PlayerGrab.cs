@@ -9,12 +9,15 @@ public class PlayerGrab : MonoBehaviour
     [SerializeField] private BaseItem _handObject;
     [SerializeField] private ItemManager _itemManager;
     [SerializeField] private float _pickupMaximum = 2f;
-    [SerializeField] private UIManager _uiManager;
+    [SerializeField] public UIManager _uiManager;
     private float _pickupDistance;
     private float _distance;
     private BaseItem lastBaseItem;
     private BaseItem currentBaseItem;
-    private PhotonView _view;   
+    private PhotonView _view;
+    [SerializeField]private bool _grabStatus = true;
+    [SerializeField]private bool _pickupStatus;
+    [SerializeField] private bool _dropStatus;
 
     public bool isObjectGrabbed()
     {
@@ -24,13 +27,13 @@ public class PlayerGrab : MonoBehaviour
     void Awake()
     {
         _view = GetComponent<PhotonView>();
-        if (_view.IsMine)
-        {
+       if (_view.IsMine)
+       {
             if (!_itemManager)
             {
                 _itemManager = FindAnyObjectByType<ItemManager>();
             }
-        }
+       }
     }
 
     public BaseItem GetHandBaseItem()
@@ -43,70 +46,102 @@ public class PlayerGrab : MonoBehaviour
         if (_view.IsMine)
         {
             UIUpdate();
-
-            if (Input.GetKeyDown(KeyCode.E))
+            if (_grabStatus)
             {
-                _pickupDistance = 2f;
-                if (_hand.childCount <= 0)
+                if (Input.GetKeyDown(KeyCode.E))
                 {
-                    _handObject = null;
-                }
-                if (!_handObject)
-                {
-                    PickUpItem();
+                    _pickupDistance = 2f;
+
+                    if (_hand.childCount <= 0)
+                    {
+                        _handObject = null;
+                    }
+                    if (!_handObject)
+                    {
+                        _pickupStatus = true;
+                    }
+                    else
+                    {
+                        _dropStatus = true;
+                    }
+                    _pickupDistance = _distance;
                 }
                 else
                 {
-                    DropItem();
+                    _pickupStatus = false;
+                    _dropStatus = false;
                 }
-                _pickupDistance = _distance;
-
-
             }
         }
     }
 
+    public bool GetPickupStatus()
+    {
+        return _pickupStatus;
+    }
+
+    public bool GetDropStatus()
+    {
+        return _dropStatus;
+    }
+    
     public void PickUpItem()
     {
-        _handObject = currentBaseItem;
-        if (_handObject)
-        {
-            _itemManager.RemoveItem(_handObject);
-            _handObject.ToggleRigidBody(true);
-            _handObject.transform.parent = _hand;
-            _handObject.transform.localPosition = Vector3.zero;
-            _handObject.transform.localRotation = Quaternion.identity;
-            _handObject.GetItemCollider().enabled = false;
-        }
+
+            _handObject = currentBaseItem;
+            if (_handObject)
+            {
+                _itemManager.RemoveItem(_handObject);
+                _handObject.ToggleRigidBody(true);
+                _handObject.transform.parent = _hand;
+                _handObject.transform.localPosition = Vector3.zero;
+                _handObject.transform.localRotation = Quaternion.identity;
+                _handObject.GetItemCollider().enabled = false;
+            }
+        
     }
 
     public void DropItem()
     {
-        _handObject.GetItemCollider().enabled = true;
-        _handObject.ToggleRigidBody(false);
-        _handObject.transform.parent = null;
-        _itemManager.AddItem(_handObject);
-        _handObject = null;
+            _handObject.GetItemCollider().enabled = true;
+            _handObject.ToggleRigidBody(false);
+            _handObject.transform.parent = null;
+            _itemManager.AddItem(_handObject);
+            _handObject = null;
     }
     public void UIUpdate()
     {
-        currentBaseItem = PickClosestObject();
-        if (currentBaseItem != lastBaseItem)
+        if (_uiManager != null)
         {
-            
-            if (!_handObject)
+            currentBaseItem = PickClosestObject();
+            if (currentBaseItem != lastBaseItem)
             {
-                _uiManager.SetGrabVisual(true);
-                _uiManager.SetText("Pick Up");
+
+                if (!_handObject)
+                {
+
+                    _uiManager.SetGrabVisual(true);
+                    _uiManager.SetText("Pick Up");
+                }
+                if (!currentBaseItem)
+                {
+                    _uiManager.SetGrabVisual(false);
+                }
+                lastBaseItem = currentBaseItem;
             }
-            if (!currentBaseItem)
-            {
-                _uiManager.SetGrabVisual(false);
-            }
-            lastBaseItem = currentBaseItem;
         }
     }
-    
+
+    public void DisableControl()
+    {
+        _grabStatus = false;
+    }
+
+    public void EnableControl()
+    {
+        _grabStatus = true; 
+    }
+
 
     BaseItem PickClosestObject()
     {

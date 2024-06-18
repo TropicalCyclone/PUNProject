@@ -22,6 +22,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private UnityEvent WalkingExit;
     [SerializeField] private UnityEvent JumpEnter;
     [SerializeField] private UnityEvent JumpExit;
+
+    public void SetCamera(GameObject cam)
+    {
+        _cam = cam.transform;
+    }
     public bool GetCrouchStatus()
     {
         return _isCrouching;
@@ -46,10 +51,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_view.IsMine)
-        {
+       if (_view.IsMine)
+       {
             PlayerControl();
-        }
+       }
     }
 
     private void PlayerControl()

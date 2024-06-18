@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    [SerializeField]
-    private HashSet<BaseItem> _items = new(); 
+    [SerializeField] private HashSet<BaseItem> _items = new(); 
    
     // Start is called before the first frame update
     void Start()

@@ -44,7 +44,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Joined Game");
-        PhotonNetwork.LoadLevel("Game");
+        PhotonNetwork.LoadLevel("Game 2");
     }
 
     public void SetNickname()
