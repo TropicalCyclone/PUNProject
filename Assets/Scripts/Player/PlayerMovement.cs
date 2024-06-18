@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Photon.Pun;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,9 +16,12 @@ public class PlayerMovement : MonoBehaviour
     private bool _hasWalked;
     private float _walkingSpeed;
     private Rigidbody rb;
+    private PhotonView _view;
 
     [SerializeField] private UnityEvent WalkingEnter;
     [SerializeField] private UnityEvent WalkingExit;
+    [SerializeField] private UnityEvent JumpEnter;
+    [SerializeField] private UnityEvent JumpExit;
     public bool GetCrouchStatus()
     {
         return _isCrouching;
@@ -31,13 +35,24 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        _walkingSpeed = _speed;
-        rb = GetComponent<Rigidbody>();
+        _view = GetComponent<PhotonView>(); 
+        if (_view.IsMine)
+        {
+            _walkingSpeed = _speed;
+            rb = GetComponent<Rigidbody>();
+        }
     }
 
     // Update is called once per frame
     void Update()
+    {
+        if (_view.IsMine)
+        {
+            PlayerControl();
+        }
+    }
+
+    private void PlayerControl()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
@@ -64,14 +79,14 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if(direction.magnitude >= 0.1f)
+        if (direction.magnitude >= 0.1f)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _cam.eulerAngles.y;
-            float angle = (Mathf.SmoothDampAngle(transform.eulerAngles.y,targetAngle,ref _turnSmoothVel,_turnSmoothTime));
-            transform.rotation = Quaternion.Euler( 0f, angle, 0f);
+            float angle = (Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVel, _turnSmoothTime));
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-            Vector3 moveDir = Quaternion.Euler(0f,targetAngle,0f) * Vector3.forward;
-            rb.velocity = moveDir.normalized * GetPlayerSpeed();  
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            rb.velocity = moveDir.normalized * GetPlayerSpeed();
             //controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
 

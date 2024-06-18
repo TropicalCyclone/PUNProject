@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerGrab : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class PlayerGrab : MonoBehaviour
     private float _distance;
     private BaseItem lastBaseItem;
     private BaseItem currentBaseItem;
+    private PhotonView _view;   
 
     public bool isObjectGrabbed()
     {
@@ -21,9 +23,13 @@ public class PlayerGrab : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (!_itemManager)
+        _view = GetComponent<PhotonView>();
+        if (_view.IsMine)
         {
-            _itemManager = FindAnyObjectByType<ItemManager>();
+            if (!_itemManager)
+            {
+                _itemManager = FindAnyObjectByType<ItemManager>();
+            }
         }
     }
 
@@ -34,27 +40,30 @@ public class PlayerGrab : MonoBehaviour
         // Update is called once per frame
     void Update()
     {
-        UIUpdate();
-
-        if (Input.GetKeyDown(KeyCode.E))
+        if (_view.IsMine)
         {
-            _pickupDistance = 2f;
-            if(_hand.childCount <= 0)
+            UIUpdate();
+
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                _handObject = null;
+                _pickupDistance = 2f;
+                if (_hand.childCount <= 0)
+                {
+                    _handObject = null;
+                }
+                if (!_handObject)
+                {
+                    PickUpItem();
+                }
+                else
+                {
+                    DropItem();
+                }
+                _pickupDistance = _distance;
+
+
             }
-            if (!_handObject)
-            {
-                PickUpItem();
-            }
-            else
-            {
-                DropItem();
-            }
-            _pickupDistance = _distance;
-                
-            
-        }   
+        }
     }
 
     public void PickUpItem()
