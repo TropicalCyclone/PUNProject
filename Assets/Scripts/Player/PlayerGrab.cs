@@ -27,13 +27,12 @@ public class PlayerGrab : MonoBehaviour
     void Awake()
     {
         _view = GetComponent<PhotonView>();
-       if (_view.IsMine)
-       {
+        if (_view.IsMine) { 
             if (!_itemManager)
             {
                 _itemManager = FindAnyObjectByType<ItemManager>();
             }
-       }
+        }
     }
 
     public BaseItem GetHandBaseItem()
@@ -87,27 +86,42 @@ public class PlayerGrab : MonoBehaviour
     
     public void PickUpItem()
     {
-
+        if (_view.IsMine)
+        {
             _handObject = currentBaseItem;
             if (_handObject)
             {
                 _itemManager.RemoveItem(_handObject);
-                _handObject.ToggleRigidBody(true);
+                if (_handObject.GetItemCollider())
+                {
+                    _handObject.ToggleRigidBody(true);
+                    _handObject.GetItemCollider().enabled = false;
+                }
+                _handObject.transform.position = Vector3.zero;
                 _handObject.transform.parent = _hand;
                 _handObject.transform.localPosition = Vector3.zero;
                 _handObject.transform.localRotation = Quaternion.identity;
-                _handObject.GetItemCollider().enabled = false;
+
             }
-        
+        }
     }
 
     public void DropItem()
     {
-            _handObject.GetItemCollider().enabled = true;
-            _handObject.ToggleRigidBody(false);
-            _handObject.transform.parent = null;
-            _itemManager.AddItem(_handObject);
-            _handObject = null;
+        if (_view.IsMine)
+        {
+            if (_handObject)
+            {
+                if (_handObject.GetItemCollider())
+                {
+                    _handObject.GetItemCollider().enabled = true;
+                    _handObject.ToggleRigidBody(false);
+                }
+                _handObject.transform.parent = null;
+                _itemManager.AddItem(_handObject);
+                _handObject = null;
+            }
+        }
     }
     public void UIUpdate()
     {
