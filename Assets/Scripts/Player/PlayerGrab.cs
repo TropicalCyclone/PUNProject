@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class PlayerGrab : MonoBehaviour
 {
-    [SerializeField,Tooltip("The Place you want to make the player grab the object")] private Transform _hand;
+    [SerializeField, Tooltip("The Place you want to make the player grab the object")] private Transform _hand;
     [SerializeField] private BaseItem _handObject;
     [SerializeField] private ItemManager _itemManager;
     [SerializeField] private float _pickupMaximum = 2f;
@@ -15,19 +15,20 @@ public class PlayerGrab : MonoBehaviour
     private BaseItem lastBaseItem;
     private BaseItem currentBaseItem;
     private PhotonView _view;
-    [SerializeField]private bool _grabStatus = true;
-    [SerializeField]private bool _pickupStatus;
+    [SerializeField] private bool _grabStatus = true;
+    [SerializeField] private bool _pickupStatus;
     [SerializeField] private bool _dropStatus;
 
     public bool isObjectGrabbed()
     {
         return _handObject;
     }
-    // Start is called before the first frame update
+
     void Awake()
     {
         _view = GetComponent<PhotonView>();
-        if (_view.IsMine) { 
+        if (_view.IsMine)
+        {
             if (!_itemManager)
             {
                 _itemManager = FindAnyObjectByType<ItemManager>();
@@ -39,7 +40,7 @@ public class PlayerGrab : MonoBehaviour
     {
         return _handObject;
     }
-        // Update is called once per frame
+
     void Update()
     {
         if (_view.IsMine)
@@ -70,6 +71,13 @@ public class PlayerGrab : MonoBehaviour
                     _pickupStatus = false;
                     _dropStatus = false;
                 }
+
+                // Continuously teleport the hand object to the player's hand
+                if (_handObject != null)
+                {
+                    _handObject.transform.position = _hand.position;
+                    _handObject.transform.rotation = _hand.rotation;
+                }
             }
         }
     }
@@ -83,7 +91,7 @@ public class PlayerGrab : MonoBehaviour
     {
         return _dropStatus;
     }
-    
+
     public void PickUpItem()
     {
         if (_view.IsMine)
@@ -97,11 +105,8 @@ public class PlayerGrab : MonoBehaviour
                     _handObject.ToggleRigidBody(true);
                     _handObject.GetItemCollider().enabled = false;
                 }
-                _handObject.transform.position = Vector3.zero;
-                _handObject.transform.parent = _hand;
-                _handObject.transform.localPosition = Vector3.zero;
-                _handObject.transform.localRotation = Quaternion.identity;
-
+                _handObject.transform.position = _hand.position;
+                _handObject.transform.rotation = _hand.rotation;
             }
         }
     }
@@ -117,12 +122,14 @@ public class PlayerGrab : MonoBehaviour
                     _handObject.GetItemCollider().enabled = true;
                     _handObject.ToggleRigidBody(false);
                 }
-                _handObject.transform.parent = null;
+                _handObject.transform.position = _hand.position;
+                _handObject.transform.rotation = _hand.rotation;
                 _itemManager.AddItem(_handObject);
                 _handObject = null;
             }
         }
     }
+
     public void UIUpdate()
     {
         if (_uiManager != null)
@@ -130,10 +137,8 @@ public class PlayerGrab : MonoBehaviour
             currentBaseItem = PickClosestObject();
             if (currentBaseItem != lastBaseItem)
             {
-
                 if (!_handObject)
                 {
-
                     _uiManager.SetGrabVisual(true);
                     _uiManager.SetText("Pick Up");
                 }
@@ -153,18 +158,17 @@ public class PlayerGrab : MonoBehaviour
 
     public void EnableControl()
     {
-        _grabStatus = true; 
+        _grabStatus = true;
     }
-
 
     BaseItem PickClosestObject()
     {
         BaseItem itemDetect = null;
-        _pickupDistance =  _pickupMaximum;
+        _pickupDistance = _pickupMaximum;
         HashSet<BaseItem> Items = _itemManager.GetItems();
 
-    foreach (BaseItem item in Items)
-    {
+        foreach (BaseItem item in Items)
+        {
             if (item)
             {
                 _distance = Vector3.Distance(transform.position, item.transform.position);
@@ -174,11 +178,7 @@ public class PlayerGrab : MonoBehaviour
                     itemDetect = item;
                 }
             }
-    }
+        }
         return itemDetect;
     }
-
-    
 }
-
-

@@ -25,10 +25,10 @@ public class SpawnPlayerNew : MonoBehaviour
     void SpawnPlayers()
     {
         GameObject User = PhotonNetwork.Instantiate(Player.name, SpawnPoint.position,SpawnPoint.rotation);
-        PlayerMovement manager = User.GetComponent<PlayerMovement>();
-        PlayerGrab playerGrab = User.GetComponent<PlayerGrab>();
         if (User.GetPhotonView().IsMine)
         {
+            PlayerMovement manager = User.GetComponent<PlayerMovement>();
+            PlayerGrab playerGrab = User.GetComponent<PlayerGrab>();
             manager.SetCamera(Camera);
             freeLook.Follow = manager.transform;
             freeLook.LookAt = manager.transform;

@@ -66,11 +66,13 @@ public class PlayerAnimation : MonoBehaviour
 
     public void PickupAnimationSet()
     {
+        if(view.IsMine) 
         grab.PickUpItem();
     }
 
     public void DropAnimationSet()
     {
+        if(view.IsMine)
         grab.DropItem();
     }
     public void grabItem()
