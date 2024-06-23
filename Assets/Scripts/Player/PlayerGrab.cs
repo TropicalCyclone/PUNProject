@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
+using UnityEngine.Timeline;
 
 public class PlayerGrab : MonoBehaviourPunCallbacks
 {
@@ -12,6 +14,7 @@ public class PlayerGrab : MonoBehaviourPunCallbacks
     [SerializeField] private ItemManager _itemManager;
     [SerializeField] private float _pickupMaximum = 2f;
     [SerializeField] public UIManager _uiManager;
+    [SerializeField] private PhotonView _view;
 
     private float _pickupDistance;
     private float _distance;
@@ -20,6 +23,8 @@ public class PlayerGrab : MonoBehaviourPunCallbacks
     private bool _grabStatus = true;
     private bool _pickupStatus;
     private bool _dropStatus;
+    private BaseItem _serverObject;
+    
 
     public bool isObjectGrabbed()
     {
@@ -28,7 +33,11 @@ public class PlayerGrab : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if (photonView.IsMine)
+        if (!_view)
+        {
+            _view = GetComponent<PhotonView>();
+        }
+        if (_view.IsMine)
         {
             if (!_itemManager)
             {
@@ -68,12 +77,13 @@ public class PlayerGrab : MonoBehaviourPunCallbacks
                 _dropStatus = false;
             }
 
+            
             // Continuously teleport the hand object to the player's hand
-            if (_handObject != null)
-            {
-                _handObject.transform.position = _hand.position;
-                _handObject.transform.rotation = _hand.rotation;
-            }
+            //if (_handObject != null)
+            //{
+            //    _handObject.transform.position = _hand.position;
+            //    _handObject.transform.rotation = _hand.rotation;
+            //}
         }
     }
 
@@ -89,7 +99,7 @@ public class PlayerGrab : MonoBehaviourPunCallbacks
 
     public void PickUpItem()
     {
-        if (photonView.IsMine)
+        if (_view.IsMine)
         {
             _handObject = currentBaseItem;
             if (_handObject)
@@ -101,42 +111,55 @@ public class PlayerGrab : MonoBehaviourPunCallbacks
                     _handObject.ToggleRigidBody(true);
                     _handObject.GetItemCollider().enabled = false;
                 }
+                _handObject.transform.SetParent(_hand);
+                _handObject.transform.localPosition = Vector3.zero;
+                _handObject.transform.localRotation = Quaternion.identity;
 
-                _handObject.transform.position = _hand.position;
-                _handObject.transform.rotation = _hand.rotation;
-
-                photonView.RPC("SyncHandObject", RpcTarget.OthersBuffered, _handObject.gameObject.GetPhotonView().ViewID);
+                photonView.RPC("SyncHandObject", RpcTarget.OthersBuffered, _handObject.gameObject.GetPhotonView().ViewID,false);
             }
         }
     }
 
     [PunRPC]
-    private void SyncHandObject(int viewID)
+    private void SyncHandObject(int viewID,bool Drop)
     {
+        PhotonView.Find(viewID).TransferOwnership(PhotonNetwork.LocalPlayer);
         GameObject obj = PhotonView.Find(viewID).gameObject;
-        _handObject = obj.GetComponent<BaseItem>();
-        _handObject.transform.SetParent(_hand);
-        _handObject.transform.localPosition = Vector3.zero;
-        _handObject.transform.localRotation = Quaternion.identity;
+        _serverObject = obj.GetComponent<BaseItem>();
+        if (Drop)
+        {
+                _serverObject.transform.SetParent(null);
+                _serverObject.ToggleRigidBody(false);
+                _serverObject.GetItemCollider().enabled = true;
+        }
+        else
+        {
+            
+            _serverObject.ToggleRigidBody(true);
+            _serverObject.GetItemCollider().enabled = false;
+            obj.GetComponent<Collider>().enabled = false;
+            obj.GetComponent<Rigidbody>().isKinematic = true;
+            _serverObject.transform.SetParent(_hand);
+            _serverObject.transform.localPosition = Vector3.zero;
+            _serverObject.transform.localRotation = Quaternion.identity;
+        }
     }
 
     public void DropItem()
     {
-        if (photonView.IsMine && _handObject)
+        if (_view.IsMine && _handObject)
         {
             if (_handObject.GetItemCollider())
             {
                 _handObject.GetItemCollider().enabled = true;
                 _handObject.ToggleRigidBody(false);
             }
-
-            _handObject.transform.position = _hand.position;
-            _handObject.transform.rotation = _hand.rotation;
-
+            _handObject.transform.SetParent(null);
             _itemManager.AddItem(_handObject);
+            int viewID = _handObject.gameObject.GetPhotonView().ViewID;
             _handObject = null;
 
-            photonView.RPC("SyncHandObject", RpcTarget.OthersBuffered, 0);
+            photonView.RPC("SyncHandObject", RpcTarget.OthersBuffered,viewID,true);
         }
     }
 
