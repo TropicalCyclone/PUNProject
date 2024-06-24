@@ -7,6 +7,7 @@ public class hueChanger : MonoBehaviour
 
     [SerializeField] private Image image;
     private float hueValue;
+    private float initialAlpha;
 
     void Start()
     {
@@ -22,6 +23,7 @@ public class hueChanger : MonoBehaviour
         }
 
         // Set initial color with a random hue
+        initialAlpha = image.color.a; // Store the initial alpha value
         hueValue = Random.value; // Random hue value between 0 and 1
         ApplyRainbowEffect();
     }
@@ -41,6 +43,7 @@ public class hueChanger : MonoBehaviour
     {
         // Convert HSV color to RGB color
         Color newColor = Color.HSVToRGB(hueValue, 1f, 1f);
+        newColor.a = initialAlpha; // Keep the initial alpha value
         // Apply the new color to the image
         image.color = newColor;
     }
