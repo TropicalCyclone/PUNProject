@@ -9,7 +9,6 @@ public class LoadingText : MonoBehaviour
     public float clearDelay = 1f; // Delay before clearing the text
 
     [SerializeField] private string originalText;
-    private bool typing = false;
 
     void Start()
     {
@@ -25,7 +24,6 @@ public class LoadingText : MonoBehaviour
         while (true)
         {
             // Type out "Loading..."
-            typing = true;
             for (int i = 0; i <= originalText.Length; i++)
             {
                 loadingText.text = originalText.Substring(0, i);
@@ -36,7 +34,6 @@ public class LoadingText : MonoBehaviour
             yield return new WaitForSeconds(clearDelay);
 
             // Clear the text
-            typing = false;
             for (int i = originalText.Length; i >= 0; i--)
             {
                 loadingText.text = originalText.Substring(0, i);
