@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class UIManager : MonoBehaviour
 {
@@ -79,29 +81,30 @@ public class UIManager : MonoBehaviour
     {
         if (value)
         {
-            Time.timeScale = 0f;
             Cursor.lockState = CursorLockMode.None;
         }
         else
         {
-            Time.timeScale = 1.0f;
             Cursor.lockState = CursorLockMode.Locked;
         }
         Cursor.visible = value;
         _pauseMenuUI.SetActive(value);
     }
 
-    public void RestartButton()
+    public void ResumeButton()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name,LoadSceneMode.Single);
-        
+        _pauseMenuUI.SetActive(false);
     }
 
     public void ExitButton()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");  
+        StartCoroutine(DoDisconnect());
     }
-
+    IEnumerator DoDisconnect()
+    {
+        PhotonNetwork.Disconnect();
+        while (PhotonNetwork.IsConnected)
+            yield return null;
+        SceneManager.LoadScene("Lobby");
+    }
 }
