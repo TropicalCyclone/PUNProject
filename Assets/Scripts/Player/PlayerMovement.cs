@@ -9,24 +9,30 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform _cam;
     [SerializeField] private float _speed = 6f;
     [SerializeField] private float _crouchSpeed = 3f;
+    [SerializeField] private float _jumpForce = 5f;
     [SerializeField] private float _turnSmoothTime = 0.1f;
     [SerializeField] private float _turnSmoothVel;
+    [SerializeField] private LayerMask groundMask;
     private bool _isCrouching = false;
     private bool _isWalking;
     private bool _hasWalked;
+    private bool _isGrounded;
     private float _walkingSpeed;
     private Rigidbody rb;
     private PhotonView _view;
+    private CapsuleCollider _collider;
 
     [SerializeField] private UnityEvent WalkingEnter;
     [SerializeField] private UnityEvent WalkingExit;
     [SerializeField] private UnityEvent JumpEnter;
     [SerializeField] private UnityEvent JumpExit;
-
+    [SerializeField] public UIManager _UImanager;
+    [SerializeField] public ChatManager _Chatmanager;
     public void SetCamera(GameObject cam)
     {
         _cam = cam.transform;
     }
+
     public bool GetCrouchStatus()
     {
         return _isCrouching;
@@ -40,21 +46,25 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _view = GetComponent<PhotonView>(); 
+        _view = GetComponent<PhotonView>();
         if (_view.IsMine)
         {
             _walkingSpeed = _speed;
             rb = GetComponent<Rigidbody>();
+            _collider = GetComponent<CapsuleCollider>();
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-       if (_view.IsMine)
-       {
-            PlayerControl();
-       }
+        if (_view.IsMine)
+        {
+            if (_UImanager.GetUISwitch() == false || _Chatmanager.GetIsTyping() == false)
+            {
+                PlayerControl();
+            }
+        }
     }
 
     private void PlayerControl()
@@ -62,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         bool playerCrouch = Input.GetButtonDown("Fire2");
+        bool playerJump = Input.GetButtonDown("Jump");
 
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
@@ -91,8 +102,7 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            rb.velocity = moveDir.normalized * GetPlayerSpeed();
-            //controller.Move(moveDir.normalized * speed * Time.deltaTime);
+            rb.velocity = new Vector3(moveDir.normalized.x * GetPlayerSpeed(), rb.velocity.y, moveDir.normalized.z * GetPlayerSpeed());
         }
 
         if (playerCrouch)
@@ -100,6 +110,15 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("button pressed");
             _isCrouching = !_isCrouching;
             Debug.Log(_speed);
+        }
+
+        _isGrounded = Physics.CheckCapsule(_collider.bounds.center, new Vector3(_collider.bounds.center.x, _collider.bounds.min.y, _collider.bounds.center.z), _collider.radius * 0.9f, groundMask);
+
+        if (playerJump && _isGrounded)
+        {
+            Debug.Log("Has Jumped");
+            JumpEnter.Invoke();
+            rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         }
     }
 

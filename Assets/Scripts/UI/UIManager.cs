@@ -18,6 +18,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject GameOverUI;
     private bool _hasDied;
     private bool _uiSwitch;
+    public bool GetUISwitch()
+    {
+        return _uiSwitch;
+    }
     // Start is called before the first frame update
     void OnEnable()
     {
@@ -93,7 +97,7 @@ public class UIManager : MonoBehaviour
 
     public void ResumeButton()
     {
-        _pauseMenuUI.SetActive(false);
+        SetPauseVisual(false);
     }
 
     public void ExitButton()

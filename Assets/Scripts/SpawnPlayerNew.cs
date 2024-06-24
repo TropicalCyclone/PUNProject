@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Cinemachine;
+using JetBrains.Annotations;
 
 public class SpawnPlayerNew : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class SpawnPlayerNew : MonoBehaviour
     public GameObject Camera;
     public CinemachineFreeLook freeLook;
     public UIManager uiManager;
+    public ChatManager chatManager;
 
     // Update is called once per frame
     void Update()
@@ -28,12 +30,13 @@ public class SpawnPlayerNew : MonoBehaviour
         if (User.GetPhotonView().IsMine)
         {
             PlayerMovement manager = User.GetComponent<PlayerMovement>();
-            PlayerGrab playerGrab = User.GetComponent<PlayerGrab>();
+            PlayerGrab playerGrab = User.GetComponent<PlayerGrab>();  
             manager.SetCamera(Camera);
             freeLook.Follow = manager.transform;
             freeLook.LookAt = manager.transform;
             playerGrab._uiManager = uiManager;
-            
+            manager._UImanager = uiManager;
+            manager._Chatmanager = chatManager;
             return;
         }
        
