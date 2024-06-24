@@ -28,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private UnityEvent JumpExit;
     [SerializeField] public UIManager _UImanager;
     [SerializeField] public ChatManager _Chatmanager;
+
     public void SetCamera(GameObject cam)
     {
         _cam = cam.transform;
@@ -41,6 +42,11 @@ public class PlayerMovement : MonoBehaviour
     public bool GetWalkingStatus()
     {
         return _isWalking;
+    }
+
+    public bool IsInAir() 
+    {
+        return !_isGrounded;
     }
 
     // Start is called before the first frame update
@@ -58,11 +64,13 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(_isGrounded);
         if (_view.IsMine)
         {
             if (_UImanager.GetUISwitch() == false || _Chatmanager.GetIsTyping() == false)
             {
                 PlayerControl();
+                UpdateGroundedStatus();
             }
         }
     }
@@ -112,13 +120,16 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log(_speed);
         }
 
-        _isGrounded = Physics.CheckCapsule(_collider.bounds.center, new Vector3(_collider.bounds.center.x, _collider.bounds.min.y, _collider.bounds.center.z), _collider.radius * 0.9f, groundMask);
-
         if (playerJump && _isGrounded)
         {
             Debug.Log("Has Jumped");
             JumpEnter.Invoke();
             rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+        }
+
+        if (!_isGrounded)
+        {
+            JumpExit.Invoke(); 
         }
     }
 
@@ -132,5 +143,15 @@ public class PlayerMovement : MonoBehaviour
         {
             return _crouchSpeed;
         }
+    }
+
+    private void UpdateGroundedStatus()
+    {
+        float raycastDistance = _collider.bounds.extents.y + 0.1f; // Adjust the raycast distance as needed
+
+        // Raycast from slightly above the bottom of the capsule collider downward
+        bool grounded = Physics.Raycast(_collider.bounds.center, Vector3.down, raycastDistance, groundMask, QueryTriggerInteraction.Ignore);
+
+        _isGrounded = grounded;
     }
 }

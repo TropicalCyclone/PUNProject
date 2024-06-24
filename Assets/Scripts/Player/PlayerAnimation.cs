@@ -41,6 +41,15 @@ public class PlayerAnimation : MonoBehaviour
                 // animator.SetBool("IsSneaking", false);
             }
 
+            if (player.IsInAir())
+            {
+                animator.SetBool("is_in_air", true);
+            }
+            else
+            {
+                animator.SetBool("is_in_air", false);
+            }
+
             if (grab.GetPickupStatus())
             {
                 if (!only_once)
@@ -57,6 +66,7 @@ public class PlayerAnimation : MonoBehaviour
                     only_once = true;
                 }
             }
+
             else
             {
                 only_once = false;
