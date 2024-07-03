@@ -82,6 +82,7 @@
     <Compile Include="Assets\LowPolyNature\Scripts\Environment\MovingPlatform.cs" />
     <Compile Include="Assets\Scripts\Item\BaseItem.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\ItemDragHandler.cs" />
+    <Compile Include="Assets\PlatformAttach.cs" />
     <Compile Include="Assets\Scripts\Player Customization\AvatarSetUp.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\InventoryItemBase.cs" />
     <Compile Include="Assets\Scripts\Item\Item.cs" />
