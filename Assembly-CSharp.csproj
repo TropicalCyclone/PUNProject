@@ -96,6 +96,7 @@
     <Compile Include="Assets\LowPolyNature\Scripts\HUD.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Food.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
+    <Compile Include="Assets\Scripts\PlatformAttach.cs" />
     <Compile Include="Assets\Scripts\Player Customization\ss PlayerControllerLegacy.cs" />
     <Compile Include="Assets\Scripts\LobbyManager.cs" />
     <Compile Include="Assets\Scripts\Player Customization\PlayerData.cs" />
