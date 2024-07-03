@@ -60,12 +60,17 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.26f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\PolygonFantasyHeroCharacters\Scripts\CharacterRandomizer.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\HealthBar.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Inventory.cs" />
     <Compile Include="Assets\Scripts\LoadingText.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\PlayerGameobjectManager.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Crate.cs" />
+    <Compile Include="Assets\Scripts\Player Customization\AvatarManager.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerGrab.cs" />
     <Compile Include="Assets\Scripts\SpawnPlayer.cs" />
+    <Compile Include="Assets\Scripts\Player Customization\CharacterCustomizer.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Axe.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Gem.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\GameManager.cs" />
@@ -73,21 +78,31 @@
     <Compile Include="Assets\Scripts\hueChanger.cs" />
     <Compile Include="Assets\Scripts\Username.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\InventorySlot.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemManager.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Environment\MovingPlatform.cs" />
+    <Compile Include="Assets\Scripts\Item\BaseItem.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\ItemDragHandler.cs" />
+    <Compile Include="Assets\Scripts\Player Customization\AvatarSetUp.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\InventoryItemBase.cs" />
+    <Compile Include="Assets\Scripts\Item\Item.cs" />
     <Compile Include="Assets\Scripts\MessageChat.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\ItemClickHandler.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\ItemDropHandler.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Sheep.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Key.cs" />
+    <Compile Include="Assets\Scripts\SpawnPlayerNew.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\DamageSource.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\FirstAid.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\HUD.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\Food.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
+    <Compile Include="Assets\Scripts\Player Customization\ss PlayerControllerLegacy.cs" />
     <Compile Include="Assets\Scripts\LobbyManager.cs" />
+    <Compile Include="Assets\Scripts\Player Customization\PlayerData.cs" />
+    <Compile Include="Assets\Scripts\UI\UIManager.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Loading.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerAnimation.cs" />
     <Compile Include="Assets\LowPolyNature\Scripts\InventoryItem.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +112,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\PolygonFantasyHeroCharacters\Shaders\POLYGON_CustomCharacters.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
@@ -970,6 +986,10 @@
       <HintPath>Library\ScriptAssemblies\UnityEngine.Purchasing.Stores.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+      <HintPath>Library\ScriptAssemblies\com.unity.cinemachine.editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.Postprocessing.Runtime.dll</HintPath>
       <Private>False</Private>
@@ -1062,10 +1082,6 @@
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Services.Analytics">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Analytics.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEngine.Purchasing.SecurityCore">
       <HintPath>Library\ScriptAssemblies\UnityEngine.Purchasing.SecurityCore.dll</HintPath>
       <Private>False</Private>
@@ -1094,6 +1110,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Services.Analytics">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Analytics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>
@@ -1112,6 +1132,10 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.State">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>Library\ScriptAssemblies\Cinemachine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
