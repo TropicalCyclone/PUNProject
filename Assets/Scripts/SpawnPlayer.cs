@@ -10,9 +10,10 @@ public class SpawnPlayer : MonoBehaviour
     public HUD hud;
     public Inventory inventory;
     public GameManager gameManager;
-    [SerializeField]PlayerFollow playerfollow;
+    [SerializeField] PlayerFollow playerfollow;
 
-    // Update is called once per frame
+    private Vector3 lastCheckpoint;
+
     void Update()
     {
         playerfollow = FindAnyObjectByType<PlayerFollow>();
@@ -20,17 +21,17 @@ public class SpawnPlayer : MonoBehaviour
 
     private void Start()
     {
+        lastCheckpoint = SpawnPoint.position;
         SpawnPlayers();
     }
 
     void SpawnPlayers()
     {
-       
-        GameObject User = PhotonNetwork.Instantiate(Player.name, SpawnPoint.position,SpawnPoint.rotation);
+        GameObject User = PhotonNetwork.Instantiate(Player.name, lastCheckpoint, SpawnPoint.rotation);
         if (User.GetPhotonView().IsMine)
         {
             PlayerController controller = User.GetComponent<PlayerController>();
-            gameManager.Player = controller;    
+            gameManager.Player = controller;
             if (controller)
             {
                 controller.Hud = hud;
@@ -43,6 +44,22 @@ public class SpawnPlayer : MonoBehaviour
                 Debug.Log("did not link camera to player");
             }
         }
-        
+    }
+
+    public void SetCheckpoint(Vector3 checkpointPosition)
+    {
+        lastCheckpoint = checkpointPosition;
+    }
+
+    public void RespawnAtCheckpoint()
+    {
+        if (gameManager.Player != null)
+        {
+            gameManager.Player.transform.position = lastCheckpoint;
+        }
+        else
+        {
+            SpawnPlayers();
+        }
     }
 }
