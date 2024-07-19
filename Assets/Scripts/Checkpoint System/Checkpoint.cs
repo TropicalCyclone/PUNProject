@@ -12,6 +12,7 @@ public class Checkpoint : MonoBehaviour
             {
                 CheckpointManager.Instance.SetCheckpoint(photonView.ViewID, transform.position);
             }
+            Destroy(this.gameObject);
         }
     }
 }

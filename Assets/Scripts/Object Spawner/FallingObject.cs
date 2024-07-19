@@ -4,7 +4,7 @@ using Photon.Pun;
 public class FallingObject : MonoBehaviourPunCallbacks
 {
     private Rigidbody rb;
-
+    [SerializeField] float DeleteThreshold;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -14,8 +14,17 @@ public class FallingObject : MonoBehaviourPunCallbacks
         }
     }
 
+    private void Update()
+    {
+        if(transform.position.y < DeleteThreshold)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        /*
         if (collision.gameObject.CompareTag("Ground"))
         {
             Debug.Log("Falling object hit the ground");
@@ -25,7 +34,8 @@ public class FallingObject : MonoBehaviourPunCallbacks
                 PhotonNetwork.Destroy(gameObject);
             }
         }
-        else if (collision.gameObject.CompareTag("Player"))
+        */
+        if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("Falling object hit a player");
             // Lagay ng player logic damage
