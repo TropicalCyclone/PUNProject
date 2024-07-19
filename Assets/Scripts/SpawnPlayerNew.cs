@@ -32,7 +32,6 @@ public class SpawnPlayerNew : MonoBehaviour
             playerGrab._uiManager = uiManager;
             manager._UImanager = uiManager;
             manager._Chatmanager = chatManager;
-
             // Add PlayerCheckpointTracker component
             User.AddComponent<PlayerCheckpointTracker>();
         }

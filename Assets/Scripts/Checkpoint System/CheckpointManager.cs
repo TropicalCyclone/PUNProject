@@ -4,6 +4,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 using Cinemachine;
 using JetBrains.Annotations;
+using UnityEngine.UIElements;
 
 
 public class CheckpointManager : MonoBehaviourPunCallbacks
@@ -30,6 +31,7 @@ public class CheckpointManager : MonoBehaviourPunCallbacks
         if (!playerCheckpoints.ContainsKey(playerID))
         {
             playerCheckpoints[playerID] = initialPosition;
+            Debug.Log("Registered Player " + photonView.ViewID + " With Transform: " + initialPosition);
         }
     }
 
@@ -53,7 +55,9 @@ public class CheckpointManager : MonoBehaviourPunCallbacks
     {
         if (playerCheckpoints.TryGetValue(playerID, out Vector3 checkpoint))
         {
+            Debug.Log("Trying to Teleport Player to "+ checkpoint);
             playerTransform.position = checkpoint;
+            Debug.Log("Player transform is now " + playerTransform);
             Rigidbody rb = playerTransform.GetComponent<Rigidbody>();
             if (rb != null)
             {
